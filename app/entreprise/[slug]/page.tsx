@@ -5,7 +5,20 @@ import { getCompanyBySlug } from "@/lib/queries";
 interface CompanyPageProps {
   params: Promise<{ slug: string }>;
 }
-
+function sectorToSlug(sector: string) {
+  return sector
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
+}
+function toSlug(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
+}
 export default async function CompanyPage({ params }: CompanyPageProps) {
   const { slug } = await params;
   const company = await getCompanyBySlug(slug);
@@ -28,8 +41,6 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
   };
 
   const infoItems = [
-    { label: "Secteur", value: company.sector },
-    { label: "Ville", value: company.city },
     { label: "Statut", value: company.status },
     { label: "RCCM", value: company.rccm },
     { label: "NIF", value: company.nif },
@@ -38,6 +49,9 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
     { label: "Email", value: company.email },
     { label: "Adresse", value: company.address },
   ].filter((item) => item.value);
+
+
+
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -58,7 +72,39 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-3xl">
               {company.name}
             </h1>
-
+            {company.dirigeant && (
+  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+    👤 Dirigeant :{" "}
+    <Link
+      href={`/dirigeant/${company.dirigeant.toLowerCase().replace(/\s+/g, "-")}`}
+      className="font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+    >
+      {company.dirigeant}
+    </Link>
+  </p>
+)}
+{company.sector && (
+  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+    🏢 Secteur :{" "}
+    <Link
+      href={`/secteur/${sectorToSlug(company.sector)}`}
+      className="font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+    >
+      {company.sector}
+    </Link>
+  </p>
+)}
+{company.city && (
+  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
+    📍 Ville :{" "}
+    <Link
+      href={`/ville/${toSlug(company.city)}`}
+      className="font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+    >
+      {company.city}
+    </Link>
+  </p>
+)}
             {company.description && (
               <p className="mt-4 text-zinc-600 dark:text-zinc-300">
                 {company.description}

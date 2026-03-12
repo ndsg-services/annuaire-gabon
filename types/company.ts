@@ -1,4 +1,4 @@
-export interface Company {
+export type Company = {
   id: string;
   slug: string;
   name: string;
@@ -15,6 +15,7 @@ export interface Company {
   address: string | null;
   source_name: string | null;
   source_url: string | null;
-  created_at: string | null;
-  updated_at: string | null;
-}
+  dirigeant: string | null;
+  created_at: string;
+  updated_at: string;
+};
