@@ -3,8 +3,9 @@ import type { Company } from "@/types/company";
 
 export async function getCompanies(search?: string): Promise<Company[]> {
   let query = supabase
-    .from("companies")
-    .select("*")
+  .from("companies")
+  .select("*")
+  .eq("is_published", true)
     .order("name", { ascending: true });
 
   if (search && search.trim()) {

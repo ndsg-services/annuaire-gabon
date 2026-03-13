@@ -19,6 +19,7 @@ function slugToSector(slug: string) {
     aviation: "Aviation",
     it: "IT",
     services: "Services",
+    fintech: "Fintech",
   };
 
   return mapping[value] || value;
